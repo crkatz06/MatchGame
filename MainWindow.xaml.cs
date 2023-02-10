@@ -26,7 +26,7 @@ namespace MatchGame
         }
         //Method to randomly place emoji's on the grid
         private void SetUpGame()
-        {
+        {            
             //Create a list of eight pairs of emoji
             List<string> animalEmoji = new List<string>()
             {
@@ -49,6 +49,31 @@ namespace MatchGame
                 string nextEmoji = animalEmoji[index];  //Use random number "index" to get a random emoji from the list
                 textBlock.Text = nextEmoji; //Updates TextBlock with the random emoji from the list
                 animalEmoji.RemoveAt(index);    //Ending cycle by removing the random emoji from the list
+            }
+        }
+
+        TextBlock lastTextBlockClicked;
+        bool findingMatch = false;  //findingMatch tracks if user clicked on 1st emoji of a pair and is trying to find its match
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock textBlock = sender as TextBlock;
+
+            if (findingMatch == false)  //Player clicked 1st emoji of pair so emoji is made invisible and keeps track of TextBlock if needed to be made visible again
+            {
+                textBlock.Visibility = Visibility.Hidden;
+                lastTextBlockClicked = textBlock;
+                findingMatch = true;
+            }
+            else if (textBlock.Text == lastTextBlockClicked.Text)   //Match found, second emoji made invisible;unclickable as 1st. Resets findingMatch so next emoji clicked
+            {                                                       //is considered 1st of pair again
+                textBlock.Visibility = Visibility.Hidden;
+                findingMatch = false;
+            }
+            else    //emoji clicked that does not match 1st, 1st made visible again and resets findingMatch
+            {
+                lastTextBlockClicked.Visibility = Visibility.Visible;
+                findingMatch = false;
             }
         }
     }
